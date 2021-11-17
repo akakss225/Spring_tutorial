@@ -70,9 +70,15 @@
                             	$(document).ready(function(){
                             		var result = '<c:out value="${result}"/>';
                             		checkModal(result);
+                            		
+                            		// 뒤로가기 눌렀을 때 모달창이 계속 나오는것을 막아줌 1.
+                            		// history.state 초기화.
+                            		history.replaceState({}, null, null);
+                            		
                             		function checkModal(result){
                             			// 등록 후 목록으로 이동한 경우가 아니면 result 값이 없으므로 중지
-                            			if(result === ''){
+                            			// 뒤로가기 눌렀을 때 모달창이 계속 나오는것을 막아줌 2.
+                            			if(result === '' || history.state){
                             				return;
                             			}
                             			if(parseInt(result)>0){
