@@ -33,8 +33,18 @@
                            		<label>Writer</label> <input class="form-control" name="writer" value="${board.writer }" readonly>
                            	</div>
                            	<!-- data-oper >> 사용자 정의 속성. 만들어서 쓰는거임. 앞에 접두어 data가 붙음  -->
-                           	<button data-oper="modify" class="btn btn-default">mod</button>
-                           	<button data-oper="list" class="btn btn-default">list</button>
+                           	<%-- <button data-oper="modify" class="btn btn-default">
+                           		<a href='/board/modify?bno=<c:out value="${board.bno }"/>'>modify</a>
+                           	</button>
+                           	<button data-oper="list" class="btn btn-default">
+                           		<a href="/board/list">list</a>
+                           	</button> --%>
+                         	<a data-oper="modify" class="btn btn-primary" href='/board/modify?bno=<c:out value="${board.bno}"/>'>modify</a>
+                        	<a data-oper="list" class="btn btn-default" href="/board/list">list</a>
+                           	
+                           	<form id="operForm" action="/board/modify" method="get">
+                           		<input type="hidden" id="bno" name="bno" value='<c:out value="${board.bno }"/>'>
+                           	</form>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -43,4 +53,25 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+            
+            <!-- 이 jQuery 문은 수정 / 목록 기능을 버튼 태그로 구현했을 때 사용하는 query문이다. -->
+            <script type="text/javascript">
+            	$(document).ready(function(){
+            		var operForm = $("#operForm");
+            		
+            		
+            		$("button[data-oper='modify']").on("click", function(e){
+            			operForm.attr("action", "/board/modify").submit();
+            			
+            		});
+            		
+            		$("button[data-oper='list']").on("click", function(e){
+            			operFrom.find("#bno").remove()
+            			operForm.attr("action", "/board/list");
+            			operForm.submit();
+            			
+            		});
+            	});
+            </script>
+            
 <%@ include file="../include/footer.jsp" %>

@@ -41,11 +41,30 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	// 상세보기
-	@GetMapping("/get")
+	// 글 상세보기, 글 수정
+	@GetMapping({"/get", "/modify"})
 	public void get(@RequestParam("bno") Long bno, Model model) {
 		model.addAttribute("board", service.get(bno));
 	}
+	
+	// 글 삭제
+	@PostMapping("/remove")
+	public String remove(@RequestParam("bno") Long bno, RedirectAttributes rttr) {
+		log.info("remove......." + bno);
+		if(service.remove(bno)) {
+			rttr.addFlashAttribute("result", "success");
+		}
+		return "redirect:/board/list";
+	}
+	@PostMapping("/modify")
+	public String modify(BoardVO board, RedirectAttributes rttr) {
+		if(service.modify(board)) {
+			rttr.addFlashAttribute("result", "success");
+		}
+		return "redirect:/board/list";
+	}
+	
+	
 	
 	
 }
