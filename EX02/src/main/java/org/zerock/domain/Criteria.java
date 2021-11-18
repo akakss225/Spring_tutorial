@@ -12,11 +12,11 @@ public class Criteria {
 	private int amount;
 	
 	public Criteria() {
-		this(0,10);
+		this(1,10);
 	}
 	
 	public Criteria(int pageNum, int amount) {
-		this.pageNum = pageNum;
+		this.pageNum = (pageNum-1)*amount;
 		this.amount = amount;
 	}
 }

@@ -67,10 +67,15 @@
 							formObj.attr("action", "/board/remove");
 						}
 						else if(operation === "list"){
+							// 수정 전
 							// 글 목록으로 이동
-							self.location = "/board/list";
+							// self.location = "/board/list";
 							// formObj.submit()을 실행하지 않고 중지.
-							return;
+							// return;
+							// 수정 후
+							formObj.attr("action", "/board/list").attr("methid", "get");
+							formObj.empty(); // form내용을 비우기. >> 자식 태그들 지우기.
+							
 						}
 						formObj.submit();
 					});

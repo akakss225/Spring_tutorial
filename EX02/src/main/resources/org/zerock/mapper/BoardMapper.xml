@@ -11,6 +11,12 @@
 		
 	</select>
 	
+	<select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
+		<![CDATA[
+ 			select * from tbl_board order by bno desc limit #{pageNum},#{amount}
+ 		]]>
+	</select>
+	
 	<insert id="insert">
 		insert into tbl_board(title, content, writer) 
 		values(#{title}, #{content}, #{writer})
