@@ -22,4 +22,6 @@ public interface BoardMapper {
 	public int delete(Long bno);
 	// 글 수정 >> delete와 마찬가지.
 	public int update(BoardVO board);
+	// 글 갯수
+	public int getTotalCount(Criteria cri);
 }

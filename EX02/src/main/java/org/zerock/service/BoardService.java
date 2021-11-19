@@ -19,4 +19,6 @@ public interface BoardService {
 	// 글 목록 + 페이징
 	public List<BoardVO> getList(Criteria cri);
 	
+	public int getTotal(Criteria cri);
+	
 }

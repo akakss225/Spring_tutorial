@@ -13,7 +13,9 @@
 	
 	<select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
 		<![CDATA[
- 			select * from tbl_board order by bno desc limit #{pageNum},#{amount}
+ 			select * from tbl_board
+ 			order by bno desc 
+ 			limit ${(pageNum-1)*10},#{amount}
  		]]>
 	</select>
 	
@@ -42,4 +44,8 @@
 		update tbl_board set title=#{title}, content=#{content}, writer=#{writer}, updateDate=sysdate()
 		where bno=#{bno}
 	</update>
+	
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_board
+	</select>
 </mapper>

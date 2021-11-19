@@ -39,11 +39,17 @@
                            	<button data-oper="list" class="btn btn-default">
                            		<a href="/board/list">list</a>
                            	</button> --%>
-                         	<a data-oper="modify" class="btn btn-primary" href='/board/modify?bno=<c:out value="${board.bno}"/>'>modify</a>
-                        	<a data-oper="list" class="btn btn-default" href="/board/list">list</a>
+                           	
+                         	<%-- <a data-oper="modify" class="btn btn-primary" href='/board/modify?bno=<c:out value="${board.bno}"/>'>modify</a>
+                        	<a data-oper="list" class="btn btn-default" href="/board/list">list</a> --%>
+                        	
+                        	<button data-oper="modify" class="btn btn-primary">modify</button>
+                           	<button data-oper="list" class="btn btn-default">list</button>
                            	
                            	<form id="operForm" action="/board/modify" method="get">
                            		<input type="hidden" id="bno" name="bno" value='<c:out value="${board.bno }"/>'>
+                           		<input type="hidden" id="bno" name="pageNum" value='<c:out value="${cri.pageNum }"/>'>
+                           		<input type="hidden" id="bno" name="amount" value='<c:out value="${cri.amount }"/>'>
                            	</form>
                         </div>
                         <!-- /.panel-body -->
@@ -66,7 +72,7 @@
             		});
             		
             		$("button[data-oper='list']").on("click", function(e){
-            			operFrom.find("#bno").remove()
+            			operForm.find("#bno").remove()
             			operForm.attr("action", "/board/list");
             			operForm.submit();
             			

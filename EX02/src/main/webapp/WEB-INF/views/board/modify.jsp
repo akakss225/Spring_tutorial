@@ -20,6 +20,8 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <form role="form" action="/board/modify" method="post">
+                            	<input type="hidden" name="pageNum" value='<c:out value="${cri.pageNum}"/>'>
+                            	<input type="hidden" name="amount" value='<c:out value="${cri.amount}"/>'>
                             	<div class="form-group">
                             		<label>bNo</label> <input class="form-control" name="bno" value='<c:out value="${board.bno}"/>' readonly>
                             	</div>
@@ -67,14 +69,19 @@
 							formObj.attr("action", "/board/remove");
 						}
 						else if(operation === "list"){
-							// 수정 전
-							// 글 목록으로 이동
-							// self.location = "/board/list";
-							// formObj.submit()을 실행하지 않고 중지.
-							// return;
-							// 수정 후
-							formObj.attr("action", "/board/list").attr("methid", "get");
+							formObj.attr("action", "/board/list").attr("method", "get");
+							
+							// hidden tag 복제
+							var pageNumTag = $("input[name='pageNum']").clone();
+							var amountTag = $("input[name='amount']").clone();
+							
 							formObj.empty(); // form내용을 비우기. >> 자식 태그들 지우기.
+							
+							// 다시 hidden tag추가.
+							formObj.append(pageNumTag);
+							formObj.append(amountTag);
+							
+							
 							
 						}
 						formObj.submit();

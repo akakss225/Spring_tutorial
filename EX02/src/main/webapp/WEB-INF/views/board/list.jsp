@@ -34,7 +34,7 @@
                                 	<tr>
                                 		<td><c:out value="${board.bno}" /></td>
                                 		<td>
-                                			<a href='/board/get?bno=<c:out value="${board.bno}"/>'>
+                                			<a class="move" href='<c:out value="${board.bno}"/>'>
                                 				<c:out value="${board.title}" />
                                 			</a>
                                 		</td>
@@ -121,6 +121,14 @@
                             			console.log("click");
                                 		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
                                 		actionForm.submit();
+                            		});
+                            		
+                            		$(".move").on("click", function(e){
+                            			e.preventDefault();
+                            			// hidden태그 추가
+                            			actionForm.append("<input type='hidden' name='bno' value='"+$(this).attr("href")+"'>");
+                            			actionForm.attr("action", "/board/get");
+                            			actionForm.submit();
                             		});
                             		
                             	});
