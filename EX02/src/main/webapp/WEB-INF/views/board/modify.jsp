@@ -22,6 +22,8 @@
                             <form role="form" action="/board/modify" method="post">
                             	<input type="hidden" name="pageNum" value='<c:out value="${cri.pageNum}"/>'>
                             	<input type="hidden" name="amount" value='<c:out value="${cri.amount}"/>'>
+                            	<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }"/>'>
+                           		<input type="hidden" name="type" value='<c:out value="${cri.type }"/>'>
                             	<div class="form-group">
                             		<label>bNo</label> <input class="form-control" name="bno" value='<c:out value="${board.bno}"/>' readonly>
                             	</div>
@@ -74,12 +76,16 @@
 							// hidden tag 복제
 							var pageNumTag = $("input[name='pageNum']").clone();
 							var amountTag = $("input[name='amount']").clone();
+							var keywordTag = $("input[name='keyword']").clone();
+							var typeTag = $("input[name='type']").clone();
 							
 							formObj.empty(); // form내용을 비우기. >> 자식 태그들 지우기.
 							
 							// 다시 hidden tag추가.
 							formObj.append(pageNumTag);
 							formObj.append(amountTag);
+							formObj.append(keywordTag);
+							formObj.append(typeTag);
 							
 							
 							

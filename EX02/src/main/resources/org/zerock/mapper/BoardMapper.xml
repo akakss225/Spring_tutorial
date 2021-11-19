@@ -3,6 +3,25 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.zerock.mapper.BoardMapper">
+	<sql id="criteria">
+		<trim prefix="where" prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title like concat("%",#{keyword},"%")
+						</when>
+						<when test="type == 'C'.toString()">
+							content like concat("%",#{keyword},"%")
+						</when>
+						<when test="type == 'W'.toString()">
+							writer like concat("%",#{keyword},"%")
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
 
 	<select id="getList" resultType="org.zerock.domain.BoardVO">
 		<![CDATA[
@@ -12,11 +31,12 @@
 	</select>
 	
 	<select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
-		<![CDATA[
+		
  			select * from tbl_board
+ 			<include refid="criteria"></include>
  			order by bno desc 
  			limit ${(pageNum-1)*10},#{amount}
- 		]]>
+ 		
 	</select>
 	
 	<insert id="insert">
@@ -47,5 +67,6 @@
 	
 	<select id="getTotalCount" resultType="int">
 		select count(*) from tbl_board
+		<include refid="criteria"></include>
 	</select>
 </mapper>
