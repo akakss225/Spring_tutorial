@@ -1,6 +1,8 @@
 package org.zerock.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,5 +42,16 @@ public class SampleController {
 //		return list;
 		
 		return IntStream.range(1,10).mapToObj(i -> new SampleVO(i, i+"Frist", i + "Last")).collect(Collectors.toList());
+	}
+	
+	@GetMapping(value = "/getMap")
+	public Map<String, SampleVO> getMap(){
+		
+		// upcasting
+		Map<String, SampleVO> map = new HashMap<>();
+		
+		map.put("First",  new SampleVO(111,"groot", "Junior"));
+		
+		return map;
 	}
 }
