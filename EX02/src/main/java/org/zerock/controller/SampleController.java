@@ -1,5 +1,9 @@
 package org.zerock.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,4 +30,15 @@ public class SampleController {
 		return new SampleVO(113, "rocket", "racoon");
 	}
 	
+	@GetMapping(value = "/getList")
+	public List<SampleVO> getList(){
+		
+//		List<SampleVO> list;
+//		for(int i = 1; i <= 10; i++) {
+//			list.add(new SampleVO(i, i+ "First", i + "Last"));
+//		}
+//		return list;
+		
+		return IntStream.range(1,10).mapToObj(i -> new SampleVO(i, i+"Frist", i + "Last")).collect(Collectors.toList());
+	}
 }
