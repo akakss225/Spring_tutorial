@@ -1,13 +1,17 @@
 package org.zerock.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.domain.SampleVO;
@@ -35,7 +39,7 @@ public class SampleController {
 	@GetMapping(value = "/getList")
 	public List<SampleVO> getList(){
 		
-//		List<SampleVO> list;
+//		List<SampleVO> list = new ArrayList<SampleVO>();
 //		for(int i = 1; i <= 10; i++) {
 //			list.add(new SampleVO(i, i+ "First", i + "Last"));
 //		}
@@ -54,4 +58,43 @@ public class SampleController {
 		
 		return map;
 	}
+	
+	@GetMapping(value = "/getMap2")
+	public Map<String, List<SampleVO>> getMap2(){
+		
+		Map<String, List<SampleVO>> map = new HashMap<>();
+		
+		List<SampleVO> list = new ArrayList<SampleVO>();
+		
+		for(int i = 1; i <= 10; i++) {
+			list.add(new SampleVO(i, i+ "First", i + "Last"));
+		}
+		
+		map.put("First", list);
+		
+		return map;
+	}
+	
+	@GetMapping(value = "/check", params = {"height", "weight"})
+	public ResponseEntity<SampleVO> check(Double height, Double weight){
+		
+		// 문자열 + double = 문자열. >> 일종의 타입 바꿔주기 팁.
+		SampleVO vo = new SampleVO(0, "" + height, "" + weight);
+		
+		ResponseEntity<SampleVO> result = null;
+		
+		if(height < 150) {
+			result = ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(vo);
+		}
+		else {
+			result = ResponseEntity.status(HttpStatus.OK).body(vo);
+		}
+		return result;
+	}
+	
+	@GetMapping("/product/{cat}/{pid}")
+	public String[] getPath(@PathVariable("cat") String cat, @PathVariable("pid") Integer pid) {
+		return new String[] { "category : " + cat, "productid : " + pid };
+	}
+	
 }
