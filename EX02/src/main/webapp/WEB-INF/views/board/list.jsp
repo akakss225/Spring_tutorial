@@ -17,6 +17,16 @@
                         <div class="panel-heading">
                             Board List Page
                             <button id="regBtn" type="button" class="btn btn-primary btn-xs pull-right">posting</button>
+                            
+                            <div class="dropdown pull-right">
+								  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Amount
+								  <span class="caret"></span></button>
+								  <ul class="dropdown-menu">
+									<li><a href="10">10</a></li>
+									<li><a href="15">15</a></li>
+									<li><a href="20">20</a></li>
+								  </ul>
+							</div>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -165,6 +175,14 @@
                             			searchForm.find("input[name='pageNum']").val("1");
                             			e.preventDefault();
                             			searchForm.submit();
+                            		});
+                            		
+                            		
+                            		$(".dropdown a").on("click", function(e){
+                            			e.preventDefault();
+                            			actionForm.find("input[name='amount']").val($(this).attr("href"));
+                            			actionForm.submit();
+                            			
                             		});
                             		
                             	});
