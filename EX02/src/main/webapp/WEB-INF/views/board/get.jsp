@@ -74,7 +74,9 @@
 	            			
 	            			</ul>
 	            		</div>
-	            		<div class="panel-footer"></div>
+	            		<div class="panel-footer">
+	            		
+	            		</div>
             		</div>
             	</div>
             </div>
@@ -141,23 +143,90 @@
             		
             		showList(1);
             		
+            		// 댓글 목록에서 pagination을 보이게 구문 추가.
             		function showList(page){
-            			replyService.getList({bno : bnoValue, page : page || 1}, function(list){
+            			replyService.getList({bno : bnoValue, page : page || 1}, function(replyCnt, list){
+            				
+            				
+            				// 등록 후 마지막 페이지로 이동하는 코드
+            				if(page == -1){
+            					pageNum = Math.ceil(replyCnt/ 10.0);
+            					showList(pageNum);
+            					return;
+            				}
             				
             				var str = "";
+            				
             				if(list == null || list.lenght == 0){
-            					replyUL.html("");
             					return;
             				}
             				for (var i = 0, len = list.length || 0; i < len; i++){
             					str += "<li class='left clearfix' data-rno='"+ list[i].rno +"'>";
-            					str += "	<div><div class = 'header'><strong class='primary-font'>" + list[i].replyer + "</strong>";
+            					str += "	<div><div class = 'header'><strong class='primary-font'>[" + list[i].replyer + "] " + list[i].replyer + "</strong>";
             					str += "	<small class='pull-right text-muted'>" + replyService.displayTime(list[i].replyDate) + "</small></div>";
             					str += "	<p>" + list[i].reply + "</p></div></li>";
             				}
             				replyUL.html(str);
+            				// 댓글 페이지 보이게하는 코드
+            				showReplyPage(replyCnt);
             			});
             		}
+            		
+            		// 댓글 pagenation구현.
+            		var pageNum = 1;
+            		var replyPageFooter = $(".panel-footer");
+            		
+            		function showReplyPage(replyCnt){
+            			var endNum = Math.ceil(pageNum/10.0) * 10;
+            			var startNum = endNum - 9;
+            			
+            			var prev = startNum != 1;
+            			var next = false;
+            			
+            			if(endNum * 10 >= replyCnt){
+            				endNum = Math.ceil(replyCnt/10.0);
+            			}
+            			if(endNum * 10 < replyCnt){
+            				next = true;
+            			}
+            			
+            			var str = "<ul class='pagination pull-right'>";
+            			
+            			if(prev){
+            				str += "<li class='page-item'><a class='page-link' href='"+ (startNum - 1) +"'>Previous</a></li>";
+            			}
+            			
+            			for(var i = startNum; i <= endNum; i++){
+            				var active = pageNum == i? "active" : "";
+            				
+            				str += "<li class='page-item "+active+"'><a class='page-link' href='"+i+"'>" + i + "</a></li>";
+            			}
+            			if(next){
+            				str += "<li class='page-item'><a class='page-link' href='" +(endNum + 1)+ "'>Next</a></li>";
+            			}
+            			
+            			str += "</ul></div>";
+            			
+            			console.log(str);
+            			
+            			replyPageFooter.html(str);
+            		} // showReplyPage()
+            		
+            		replyPageFooter.on("click", "li a", function(e){
+            			e.preventDefault();
+            			
+            			console.log("page click");
+            			
+            			var targetPageNum = $(this).attr("href");
+            			
+            			console.log("targetPageNum : " + targetPageNum);
+            			
+            			pageNum = targetPageNum;
+            			
+            			showList(pageNum);
+            			
+            		});
+            		
             		var modal = $(".modal");
             		var modalInputReply = modal.find("input[name='reply']");
             		var modalInputReplyer = modal.find("input[name='replyer']");
@@ -169,15 +238,18 @@
             		
             		$("#addReplyBtn").on("click", function(){
             			
+            			// input 태그를 우선 비워주기
             			modal.find("input").val("");
-            			modalInputReplyDate.closest("div").hide();
+            			// 등록 할 때에는 등록과 닫기 버튼만 있으면 되기 때문에, 다른건 숨겨준다.
+            			modalInputReplyDate.closest("div").hide(); // 부모중 가장 가까운 부모를 찾아서 숨겨줌 이 경우, replyDate의 form-group이 됨
             			modal.find("button[id != 'modalCloseBtn']").hide();
-            			
+            			// register버튼 보여주게 하는코드
             			modalRegisterBtn.show();
             			
             			$(".modal").modal("show");
             			
-            		})
+            		});
+            		
             		modalRegisterBtn.on("click", function(e){
             			var reply = {
             					reply : modalInputReply.val(),
@@ -190,7 +262,8 @@
             				modal.find("input").val("");
             				modal.modal("hide");
             				
-            				showList(1);
+            				//showList(1);
+            				showList(-1); // 댓글 등록시, 등록이 된 마지막 페이지로 이동을 의미함.
             			});
             		});
             		
@@ -220,7 +293,7 @@
             			replyService.update(reply, function(result){
             				alert(result);
             				modal.modal("hide");
-            				showList(1);
+            				showList(pageNum);
             			});
             			
             		});
@@ -231,7 +304,7 @@
             			replyService.remove(rno, function(result){
             				alert(result);
             				modal.modal("hide");
-            				showList(1);
+            				showList(pageNum);
             			});
             		});
             		
