@@ -30,8 +30,12 @@
 		
 	<mybatis-spring:scan base-package="org.zerock.mapper"/>
 	
-	<context:component-scan base-package="org.zerock.service"></context:component-scan>
+	<!-- 어플리케이션 컨텍스트안에 이미 등록된 빈들의 어노테이션을 활성화를 위해 사용 -->
+	<context:annotation-config></context:annotation-config>
 	
+	<context:component-scan base-package="org.zerock.service"></context:component-scan>
+	<!-- aop 설정 + autoproxy -->
 	<context:component-scan base-package="org.zerock.aop"></context:component-scan>
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	
 </beans>
