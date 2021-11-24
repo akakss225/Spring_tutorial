@@ -38,8 +38,8 @@ var replyService = (function(){
 	
 	function remove(rno, callback, error){
 		$.ajax({
-			type : "delete",
-			url : "/replies/" + rno,
+			type : 'delete',
+			url : '/replies/' + rno,
 			success : function(deleteResult, status, xhr){
 				if (callback) {
 					callback(deleteResult);
@@ -58,10 +58,10 @@ var replyService = (function(){
 		console.log("RNO : " + reply.rno);
 		
 		$.ajax({
-			type : "put",
-			url : "/replies/" + reply.rno,
+			type : 'put',
+			url : '/replies/' + reply.rno,
 			data : JSON.stringify(reply),
-			contentType : "application.json; charset=utf-8",
+			contentType : "application/json; charset=utf-8",
 			success : function(result, status, xhr){
 				if(callback){
 					callback(result);
