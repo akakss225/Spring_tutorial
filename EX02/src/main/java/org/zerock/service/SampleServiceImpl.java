@@ -1,9 +1,12 @@
 package org.zerock.service;
 
-public class SampleServiceImpl implements SampleService {
+import org.springframework.stereotype.Service;
+
+@Service
+public class SampleServiceImpl implements SampleService { // pointjoin
 
 	@Override
-	public Integer doAdd(String str1, String str2) throws Exception {
+	public Integer doAdd(String str1, String str2) throws Exception { // pointcut
 		
 		return Integer.parseInt(str1) + Integer.parseInt(str2);
 	}
