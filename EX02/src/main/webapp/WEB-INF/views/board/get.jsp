@@ -205,7 +205,7 @@
             				str += "<li class='page-item'><a class='page-link' href='" +(endNum + 1)+ "'>Next</a></li>";
             			}
             			
-            			str += "</ul></div>";
+            			str += "</ul>";
             			
             			console.log(str);
             			

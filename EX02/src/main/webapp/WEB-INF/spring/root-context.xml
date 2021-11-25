@@ -4,10 +4,12 @@
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property> 
@@ -27,15 +29,20 @@
 		<property name="dataSource" ref="dataSource"></property>
 		<!-- 바로 위의 id=dataSource를 참조하는 코드 -->
 	</bean>
+	
+	<!-- 	트랜잭션 사용가능 bean 입력. annotation사용 가능 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<tx:annotation-driven/>
 		
 	<mybatis-spring:scan base-package="org.zerock.mapper"/>
 	
-	<!-- 어플리케이션 컨텍스트안에 이미 등록된 빈들의 어노테이션을 활성화를 위해 사용 -->
-	<context:annotation-config></context:annotation-config>
+	
 	
 	<context:component-scan base-package="org.zerock.service"></context:component-scan>
 	<!-- aop 설정 + autoproxy -->
 	<context:component-scan base-package="org.zerock.aop"></context:component-scan>
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-	
+	<!-- advice와 target을 묶어주는 proxy 설정임. -->
 </beans>
