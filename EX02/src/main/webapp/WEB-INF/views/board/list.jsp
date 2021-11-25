@@ -45,7 +45,7 @@
                                 		<td><c:out value="${board.bno}" /></td>
                                 		<td>
                                 			<a class="move" href='<c:out value="${board.bno}"/>'>
-                                				<c:out value="${board.title}" /> <b>[<c:out value="${board.replycnt }"/>]</b>
+                                				<c:out value="${board.title}" /> <b><c:out value="${board.replycnt == 0 ? '' : [board.replycnt] }"/></b>
                                 			</a>
                                 		</td>
                                 		<td><c:out value="${board.writer}" /></td>
@@ -148,7 +148,9 @@
                             		
                             		$(".paginate_button a").on("click", function(e){
                             			e.preventDefault();
+                            			
                             			console.log("click");
+                            			actionForm.attr("action", "/board/list");
                                 		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
                                 		actionForm.submit();
                             		});
@@ -184,6 +186,7 @@
                             			actionForm.submit();
                             			
                             		});
+                            		
                             		
                             	});
                             </script>
