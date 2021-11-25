@@ -32,4 +32,27 @@ public class UploadController {
 			}
 		}
 	}
+	
+	@GetMapping("/uploadAjax")
+	public void uploadAjax() {}
+	
+	@PostMapping("/uploadAjaxAction")
+	public void uploadAjaxPost(MultipartFile[] uploadFile, Model model) {
+		String uploadFolder = "/Users/sumin/Desktop/Spring/upload";
+		
+		for(MultipartFile multipartFile:uploadFile) {
+			
+			String uploadFileName = multipartFile.getOriginalFilename();
+			
+			
+			File saveFile = new File(uploadFolder, uploadFileName);
+			
+			try {
+				multipartFile.transferTo(saveFile);
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
