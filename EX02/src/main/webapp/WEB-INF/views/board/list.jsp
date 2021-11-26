@@ -150,15 +150,17 @@
                             			e.preventDefault();
                             			
                             			console.log("click");
+                            			// 뒤로가기 클릭시 , 다시 list화면이 나오게 하는 코드
                             			actionForm.attr("action", "/board/list");
                                 		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
                                 		actionForm.submit();
                             		});
-                            		
+                            		// 제목 클릭시 상세보기로 이동
                             		$(".move").on("click", function(e){
                             			e.preventDefault();
                             			// hidden태그 추가
-                            			actionForm.append("<input type='hidden' name='bno' value='"+$(this).attr("href")+"'>");
+                            			$(".bnoValue").remove();
+                            			actionForm.append("<input class='bnoValue' type='hidden' name='bno' value='"+$(this).attr("href")+"'>");
                             			actionForm.attr("action", "/board/get");
                             			actionForm.submit();
                             		});
