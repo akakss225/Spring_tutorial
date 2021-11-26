@@ -5,18 +5,44 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+	<style>
+		.uploadResult {
+			width : 100%;
+			background-color : gray;
+		}
+		
+		.uploadResult ul {
+			display : flex;
+			flex-flow : row;
+			justify-content : center;
+			align-items : center;
+		}
+		
+		.uploadResult ul li {
+			list-style : none;
+			padding : 10px;
+		}
+		
+		.uploadResult ul li img {
+			width : 20px;
+		}
+	</style>
 </head>
 <body>
 	<h1>File Upload</h1>
 	<div class="uploadDiv">
 		<input type="file" name="uploadFile" multiple>
 	</div>
+	<div class="uploadResult">
+		<ul>
+		
+		</ul>
+	</div>
 	<button id="uploadBtn">Upload</button>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script>
 		$(document).ready(function(){
 			// 파일의 확장자or 크기 사전처리
-			
 			var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 			var maxSize = 5242880; // 5MB
 			
@@ -31,6 +57,30 @@
 				}
 				return true;
 			}
+			
+			// 업로드한 파일 리스트를 보여주는 코드
+			var uploadResult = $(".uploadResult ul");
+			
+			function showUploadedFile(uploadResultArr){
+				var str = "";
+				
+				$(uploadResultArr).each(function(i, obj){
+					if(!obj.image){
+						str += "<li><img src='/resources/img/attach.png'>" + obj.fileName + "</li>";
+					}
+					else{
+						// str += "<li>" + obj.fileName + "</li>";
+						var fileCallPath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+						str += "<li><img src='/display?fileName=" + fileCallPath + "'></li>";
+					}
+				});
+				uploadResult.append(str);
+			}
+			
+			
+			// 파일 업로드 후, 초기화해주는데 필요한 clone
+			var cloneObj = $(".uploadDiv").clone();
+			
 			// upload
 			$("#uploadBtn").on("click", function(e){
 				var formData = new FormData(); // form태그에 데이터를 저장하는 컨테이너 역할을 하는 객체
@@ -51,13 +101,14 @@
 					contentType : false,
 					data : formData,
 					type : 'POST',
+					dataType : 'json',
 					success : function(result){
 						alert("Uploaded");
+						showUploadedFile(result);
+						$(".uploadDiv").html(cloneObj.html());
 					}
 				}); // ajax문법. >> parameter는 객체로 받는다. 내부는 프로퍼티로 꽉~
 			});
-			
-			
 		});
 	</script>
 </body>
