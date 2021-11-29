@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -194,7 +195,7 @@ public class UploadController {
 			if(userAgent.contains("Trident")) { // 인터넷 익스플로러인지 확인
 				log.info("IE Browser");
 				
-				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8").replaceAll("/", " ");
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8").replaceAll("\\+", " ");
 				
 			}
 			else if(userAgent.contains("Edge")) { // 엣지인지 확인 지금은 필요없음. >> 구글크롬이랑 똑같음.
@@ -215,6 +216,40 @@ public class UploadController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK); 
+	}
+	
+	@PostMapping("/deleteFile")
+	@ResponseBody
+	public ResponseEntity<String> deleteFile(String fileName, String type){
+		
+		log.info("delete : " + fileName);
+		
+		File file;
+		
+		try {
+			file = new File("/Users/sumin/Desktop/Spring/upload/" + URLDecoder.decode(fileName, "UTF-8"));
+			
+			// 썸네일 삭제
+			file.delete();
+			
+			if(type.equals("image")) {
+				// 원본파일 경로
+				String largeFileName = file.getAbsolutePath().replace("s_", "");
+				
+				log.info("largeFileName : " + largeFileName);
+				
+				file = new File(largeFileName);
+				
+				file.delete();
+			}
+		}
+		catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			
+		}
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
+		
 	}
 	
 	
