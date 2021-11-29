@@ -34,8 +34,9 @@
 			top : 0%;
 			width : 100%;
 			height : 100%;
-			bacground-color : gray;
+			background-color : gray;
 			z-index : 100;
+			background : rgba(255,255,255,0.5);
 		}
 		.bigPicture {
 			position : relative;
@@ -71,11 +72,9 @@
 		function showImage(fileCallPath){
 			$(".bigPictureWrapper").css("display", "flex").show();
 			
-			$(".bigPicture").html("<img src='/display?fileName="+ encode(fileCallPath) +"'>").animate({width : '100%', heigth : '100%'}, 1000);
+			$(".bigPicture").html("<img src='/display?fileName="+ encodeURI(fileCallPath) +"'>").animate({width : '100%', height : '100%'}, 1000);
 			
 		}
-		
-		
 		
 		$(document).ready(function(){
 			// 파일의 확장자or 크기 사전처리
@@ -96,9 +95,9 @@
 			
 			// 원본사진이 출력된 이후, 다시 종료하는 함수.
 			$(".bigPictureWrapper").on("click", function(e){
-				$(".bigPicture").animate({width : '0%', heigth : '0%'}, 1000);
-				setTimeOut(() => {
-					$(this).hide();
+				$(".bigPicture").animate({width : '0%', height : '0%'}, 1000);
+				setTimeout(function(){
+					$(".bigPictureWrapper").hide();
 				}, 1000);
 			});
 			
@@ -129,8 +128,8 @@
 						originPath = originPath.replace(new RegExp(/\\/g), "/");
 
 						str += "<li><a href=\"javascript:showImage('" + originPath + "')\">" +
-								"<img src='display?fileName=" + fileCallPath + "'></a>" + 
-								"<span data-file='"+ fileCallPath +"' file-type='image'> x </span></li>";
+								"<img src='/display?fileName=" + fileCallPath + "'></a>" + 
+								"<span data-file='"+ fileCallPath +"' data-type='image'> x </span></li>";
 					}
 				});
 				uploadResult.append(str);
