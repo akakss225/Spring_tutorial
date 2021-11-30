@@ -3,6 +3,50 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ include file="../include/header.jsp" %>
+<style>
+	.uploadResult {
+		width : 100%;
+		background-color : gray;
+	}
+	
+	.uploadResult ul {
+		display : flex;
+		flex-flow : row;
+		justify-content : center;
+		align-items : center;
+	}
+	
+	.uploadResult ul li {
+		list-style : none;
+		padding : 10px;
+	}
+	
+	.uploadResult ul li img {
+		width : 20px;
+	}
+	.bigPictureWrapper {
+		position : absolute;
+		display : none;
+		justify-content : center;
+		align-items : center;
+		top : 0%;
+		width : 100%;
+		height : 100%;
+		background-color : gray;
+		z-index : 100;
+		background : rgba(255,255,255,0.5);
+	}
+	.bigPicture {
+		position : relative;
+		display : flex;
+		justify-content : center;
+		align-items : center;
+	}
+	.bigPicture img{
+		width : 600px;
+	}
+</style>
+
 
             <div class="row">
                 <div class="col-lg-12">
@@ -53,6 +97,9 @@
                            		<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }"/>'>
                            		<input type="hidden" name="type" value='<c:out value="${cri.type }"/>'>
                            	</form>
+                           	
+                           	
+				            
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -61,6 +108,32 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+            <div class="bigPictureWrapper">
+           		<div class="bigPicture">
+           		
+           		</div>
+           	</div>
+			<!-- 첨부파일 업로드 부분 -->
+            <div class="row">
+            	<div class="col-lg-12">
+            		<div class="panel panel-default">
+            			<div class="panel-heading">Files</div>
+            			<div class="panel-body">
+            				
+            				<div class="uploadResult">
+            					<ul>
+            					
+            					</ul>
+            				</div>
+            			</div>
+            			<!-- end panel-body -->
+            		</div>
+            		<!-- end panel -->
+            	</div>
+            	<!-- end col-lg-12 -->
+            </div>
+            <!-- end row -->
+            <!-- 첨부파일 업로드 부분 end -->
             <!-- 댓글 목록 ------------------------------------------------------------------------------------->
             <div class="row">
             	<div class = "col-lg-12">
@@ -309,6 +382,71 @@
             		});
             		
             		
+            	});
+            </script>
+            <script>
+            	$(document).ready(function(){
+            		// 즉시 실행 함수 >> 첨부파일 미리보기
+            		(function(){
+            			var bno = '<c:out value="${board.bno}"/>';
+            			
+            			#.getJSON("/board/getAttachList", {bno : bno}, function(arr){
+            				
+            				console.log(arr);
+            				
+            				var str = "";
+            				
+            				$(arr).each(function(i, attach){
+            					if(attach.fileType){
+            						var fileCallPath = encodeURIComponent(attach.uploadPath +"/s_"+ attach.uuid + "_" + attach.fileName);
+            						
+            						str += "<li style='cursor:pointer' data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'><div>";
+            						str += "<img src='/display?fileName="+fileCallPath+"'>";
+            						str += "</div>";
+            						str += "</li>";
+            					}
+            					else{
+            						
+            						str += "<li style='cursor:pointer' data-path='"+attach.uploadPath+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'><div>";
+            						str += "<span> " + attach.fileName + "</span><br>";
+            						str += "<img src='/resources/img/attach.png'>";
+            						str += "</div>";
+            						str += "</li>";
+            					}
+            				});
+            				$(".uploadResult ul").html(str);
+            				
+            			});
+            		});
+            		
+            		$(".uploadResult").on("click", "li", function(e){
+            			
+            			console.log("view image"); 
+            			
+            			var liObj = $(this);
+            			var path = encodeURIComponent(liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data("filename"));
+            			
+            			if(liObj.data("type")){
+            				showImage(path.replace(new RegExp(/\\/g), "/"));
+            				
+            			}
+            			else{
+            				self.location = "/download?fileName=" + path;
+            			}
+            		});
+            		
+            		function showImage(fileCallPath){
+            			alert(fileCallPath);
+            			$(".bigPictureWrapper").css("display", "flex").show();
+            			
+            			$(".bigPicture").html("<img sr='/display?fileName="+fileCallPath+"'>").animate({width:'100%', height:'100%'}, 1000);
+            		}
+            		$(".bigPictureWrapper").on("click", function(e){
+            			$(".bigPicture").animate({width:'0%', height:'0%'}, 1000);
+            			setTimeout(function(){
+            				$(".bigPictureWrapper").hide();
+            			}, 1000);
+            		});
             	});
             </script>
             
