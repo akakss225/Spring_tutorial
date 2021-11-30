@@ -43,9 +43,9 @@
                             	<div class="form-group">
                             		<label>UpdateDate</label> <input class="form-control" name="updateDate" value='<fmt:formatDate pattern="yyyy/MM/dd" value="${board.updateDate }"/>' readonly>
                             	</div>
-                            	<button type="submit" data-oper="modify" data-oper='modify' class="btn btn-primary">mod</button>
-                           		<button type="submit" data-oper="remove" data-oper='delete' class="btn btn-danger">del</button>
-                           		<button type="submit" data-oper="list" data-oper='list' class="btn btn-default">list</button>
+                            	<button type="submit" data-oper="modify" class="btn btn-primary">mod</button>
+                           		<button type="submit" data-oper="remove" class="btn btn-danger">del</button>
+                           		<button type="submit" data-oper="list" class="btn btn-default">list</button>
                             </form>
                             <!-- /.form -->
                         </div>
@@ -109,7 +109,7 @@
             			<div class="panel-heading">Files</div>
             			<div class="panel-body">
             				<div class="form-group uploadDiv">
-            					<input type="file" name='uploadFIle' multiple>
+            					<input type="file" name='uploadFile' multiple>
             				</div>
             				<div class="uploadResult">
             					<ul>
@@ -156,7 +156,7 @@
 							formObj.append(keywordTag);
 							formObj.append(typeTag);
 						}
-						else if(operation == "modify"){
+						else if(operation === "modify"){
 							console.log("submit clocked");
 							
 							var str = "";
