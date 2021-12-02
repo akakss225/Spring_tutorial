@@ -148,6 +148,7 @@
             		<div class="panel panel-default">
 	            		<div class="panel-heading">
 	            			<i class="fa fa-comments fa-fw"></i> Reply
+	            			<!-- 비 로그인시 댓글입력 불가 -->
 	            			<sec:authorize access="isAuthenticated()">
 	            				<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>	   
 	            			</sec:authorize>         		
