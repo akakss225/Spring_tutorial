@@ -88,8 +88,15 @@
                          	<%-- <a data-oper="modify" class="btn btn-primary" href='/board/modify?bno=<c:out value="${board.bno}"/>'>modify</a>
                         	<a data-oper="list" class="btn btn-default" href="/board/list">list</a> --%>
                         	
-                        	<button data-oper="modify" class="btn btn-primary">modify</button>
-                           	<button data-oper="list" class="btn btn-default">list</button>
+                        	<!-- 프론트엔드 수준의 유저 확인 코드 start -->
+                        	<sec:authentication property="principal" var="pinfo" />
+                        	<sec:authorize access="isAuthenticated()">
+                        		<c:if test="${pinfo.username eq board.writer }">
+		                        	<button data-oper="modify" class="btn btn-primary">modify</button>
+		                        </c:if>
+		                    </sec:authorize>
+		                    <!-- 프론트엔드 수준의 유저 확인 코드 end -->
+		                    <button data-oper="list" class="btn btn-default">list</button>
                            	
                            	<form id="operForm" action="/board/modify" method="get">
                            		<input type="hidden" id="bno" name="bno" value='<c:out value="${board.bno }"/>'>
