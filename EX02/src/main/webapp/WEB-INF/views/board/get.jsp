@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ include file="../include/header.jsp" %>
 <style>
 	.uploadResult {
@@ -140,7 +141,9 @@
             		<div class="panel panel-default">
 	            		<div class="panel-heading">
 	            			<i class="fa fa-comments fa-fw"></i> Reply
-	            			<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>	            		
+	            			<sec:authorize access="isAuthenticated()">
+	            				<button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>	   
+	            			</sec:authorize>         		
             			</div>
 	            		<div class="panel-body">	
 	            			<ul class="chat">
