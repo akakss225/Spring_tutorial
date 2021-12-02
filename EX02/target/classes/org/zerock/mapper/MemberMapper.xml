@@ -6,20 +6,24 @@
 <mapper namespace="org.zerock.mapper.MemberMapper">
 
 	<resultMap type="org.zerock.domain.MemberVO" id="memberMap">
+		<!-- MemberVO와 대응되는 구간. -->
 		<id property="userid" column="userid" />
 		<result property="userid" column="userid" />
 		<result property="userpw" column="userpw" />
 		<result property="userName" column="username" />
 		<result property="regDate" column="regdate" />
 		<result property="updateDate" column="updatedate" />
-		<collection property="authList" column="authMap" />
+		<!-- MemberVO의 authList와 대응됨. column 속성은 아래 resultMap의 id와 대응됨. -->
+		<collection property="authList" resultMap="authMap" />
 	</resultMap>
 	
 	<resultMap type="org.zerock.domain.AuthVO" id="authMap">
+		<!-- AuthVO와 대응되는 구간. -->
 		<result property="userid" column="userid" />
 		<result property="auth" column="authority" />
 	</resultMap>
 	
+	<!-- MyBatis 의 Mapper를 이용한 join처리 -->
 	<select id="read" resultMap="memberMap">
 		select
 		mem.userid, userpw, username, enabled, regdate, updatedate, authority from
