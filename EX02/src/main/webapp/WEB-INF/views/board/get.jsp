@@ -181,7 +181,7 @@
             				</div>
             				<div class="form-group">
             					<label>Replyer</label>
-            					<input class="form-control" name="replyer" value="Replyer">
+            					<input class="form-control" name="replyer" value="Replyer" readonly>
             				</div>
             				<div class="form-group">
             					<label>Reply Date</label>
@@ -320,10 +320,21 @@
             		var modalRemoveBtn = $("#modalRemoveBtn");
             		var modalRegisterBtn = $("#modalRegisterBtn");
             		
+            		// 사용자가 로그인 했다면, 현재 로그인한 사용자가 댓글 작성자가 되어야하므로 저장할 변수 생성
+            		var replyer = null;
+            		<sec:authorize access="isAuthenticated()">
+            		replyer = '<sec:authentication property="principal.username"/>';
+            		</sec:authorize>
+            		
+            		var csrfHeaderName = "${_csrf.headerName}";
+            		var csrfTokenValue = "${_csrf.token}";
+            		
             		$("#addReplyBtn").on("click", function(){
             			
             			// input 태그를 우선 비워주기
             			modal.find("input").val("");
+            			// 댓글모달창에 현재 로그인 한 사용자의 이름으로 replyer고정
+            			modal.find("input[name='replyer']").val(replyer);
             			// 등록 할 때에는 등록과 닫기 버튼만 있으면 되기 때문에, 다른건 숨겨준다.
             			modalInputReplyDate.closest("div").hide(); // 부모중 가장 가까운 부모를 찾아서 숨겨줌 이 경우, replyDate의 form-group이 됨
             			modal.find("button[id != 'modalCloseBtn']").hide();
@@ -332,6 +343,12 @@
             			
             			$(".modal").modal("show");
             			
+            		});
+            		
+            		// Ajax Spring Security header...
+            		// ajaxSend >> 모든 ajax전송시 csrf토큰을 같이 전송하도록 세팅.
+            		$(document).ajaxSend(function(e, xhr, options){
+            			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
             		});
             		
             		modalRegisterBtn.on("click", function(e){
@@ -372,7 +389,28 @@
             		});
             		
             		modalModBtn.on("click", function(e){
-            			var reply = {rno : modal.data("rno"), reply : modalInputReply.val()};
+            			
+            			var originalReplyer = modalInputReplyer.val();
+            			
+            			var reply = {
+            					rno : modal.data("rno"), 
+           						reply : modalInputReply.val(),
+           						replyer : originalReplyer			
+            			};
+            			
+            			
+            			
+            			if(!replyer){
+            				alert("로그인 후 수정이 가능합니다.");
+            				modal.modal("hide");
+            				return;
+            			}
+            			
+            			if(replyer != originalReplyer){
+            				alert("자신이 작성한 댓글만 수정이 가능합니다.");
+            				modal.modal("hide");
+            				return;
+            			}
             			
             			replyService.update(reply, function(result){
             				alert(result);
@@ -385,7 +423,23 @@
             		modalRemoveBtn.on("click", function(e){
             			var rno = modal.data("rno");
             			
-            			replyService.remove(rno, function(result){
+            		
+            			if(!replyer){
+            				alert("로그인 후 삭제가 가능합니다.");
+            				modal.modal("hide");
+            				return;
+            			}
+            			
+            			var originalReplyer = modalInputReplyer.val();
+            			
+            			if(replyer != originalReplyer){
+            				alert("자신이 작성한 댓글만 삭제가 가능합니다.");
+            				modal.modal("hide");
+            				return;
+            			}
+            			
+            			
+            			replyService.remove(rno, originalReplyer ,function(result){
             				alert(result);
             				modal.modal("hide");
             				showList(pageNum);

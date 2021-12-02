@@ -251,6 +251,10 @@
             			return true;
             		}
             		
+            		// security 적용
+            		var csrfHeaderName = "${_csrf.headerName}";
+            		var csrfTokenValue = "${_csrf.token}";
+            		
             		$("input[type='file']").change(function(e){
             			
             			var formData = new FormData();
@@ -272,6 +276,9 @@
             				contentType : false,
             				data : formData,
             				type : 'POST',
+            				beforeSend : function(xhr){
+            					xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);	
+            				},
             				dataType : 'json',
             				success : function(result){
             					console.log(result);
