@@ -36,7 +36,7 @@ var replyService = (function(){
 		});
 	}
 	
-	function remove(rno, callback, error){
+	function remove(rno, replyer, callback, error){
 		$.ajax({
 			type : 'delete',
 			url : '/replies/' + rno,
